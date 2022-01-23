@@ -24,12 +24,12 @@ public class GameService {
 		// check existed user
 		for(Player p : players) {
 			if (p.getUsername().equalsIgnoreCase(username)) {
-				if(p.getPassword().equals(password)) { // sai pass word
+				if(p.getPassword().equals(password)) {
 					loggedUser = p;
 					break;
 				}
 				
-				return null; // dung username ma sai password thi return null
+				return null;
 			}
 		}
 		
@@ -42,7 +42,7 @@ public class GameService {
 		// load existed unfinished game record
 		for (GameRecord record : records) {
 			if (record.getPlayer().getUsername().equals(loggedUser.getUsername()) 
-					&& record.getIsFinished() == false) {   
+					&& record.getIsFinished() == false) {
 				game = record;
 				return game;
 			}

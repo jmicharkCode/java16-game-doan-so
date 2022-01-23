@@ -1,9 +1,12 @@
 package cybersoft.javabackend.gamedoanso.servlet;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Optional;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,8 +19,7 @@ import cybersoft.javabackend.gamedoanso.util.UrlConst;
 
 @WebServlet(name = "gameServlet", urlPatterns = {
 		UrlConst.GAME_ROOT,
-		UrlConst.GAME_PLAY,
-		UrlConst.GAME_LOGIN
+		UrlConst.GAME_PLAY
 })
 public class GameServlet extends HttpServlet {
 	/**
@@ -35,8 +37,16 @@ public class GameServlet extends HttpServlet {
 	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		req.getRequestDispatcher(JspConst.GAME_LOGIN)
-		.forward(req, resp);
+		String message = "Lần đầu tiên hãy nhập con số mà bạn cảm thấy may mắn!";
+		req.setAttribute("message", message);
+		
+		Player curPlayer = (Player) req.getSession().getAttribute("player");
+		
+		GameRecord record = service.loadGame(curPlayer.getUsername(), curPlayer.getPassword());
+		req.setAttribute("record", record);
+		
+		req.getRequestDispatcher(JspConst.GAME_PLAY)
+			.forward(req, resp);
 	}
 	
 	@Override
@@ -47,14 +57,8 @@ public class GameServlet extends HttpServlet {
 		GameRecord record;
 		
 		switch (path) {
-		case UrlConst.GAME_LOGIN: // load game
-			String username = req.getParameter("username");
-			String password = req.getParameter("password");
-		    
-			message = "Lần đầu tiên hãy nhập con số mà bạn cảm thấy may mắn!";
-			req.setAttribute("message", message);
+		case UrlConst.GAME_ROOT: // load game
 			
-			loadGame(req, resp, username, password);
 			break;
 		case UrlConst.GAME_PLAY: // when user input a try
 			recordId = Integer.parseInt(req.getParameter("recordId"));
@@ -85,12 +89,4 @@ public class GameServlet extends HttpServlet {
 		return "Số vừa đoán lớn hơn kết quả!";
 	}
 
-	private void loadGame(HttpServletRequest req, HttpServletResponse resp, String username, String password)
-			throws ServletException, IOException {
-		GameRecord record = service.loadGame(username, password);
-		req.setAttribute("record", record);
-		
-		req.getRequestDispatcher(JspConst.GAME_PLAY)
-			.forward(req, resp);
-	};
 }

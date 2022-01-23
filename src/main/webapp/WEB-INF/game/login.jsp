@@ -12,14 +12,15 @@
 <body>
 	<div class="container">
 	    <h1 class="text-primary text-center">Game Đoán Số</h1>
-	    <form class="w-50" action="<%=request.getContextPath() + UrlConst.GAME_LOGIN %>" method="post" class="form-group">
+	    <form class="w-50" action="<%=request.getContextPath() + UrlConst.PLAYER_LOGIN %>" method="post" class="form-group">
 	      <label for="username">Username</label>
 	      <input type="text" class="form-control" name="username" id="username"
-	        placeholder="Enter username">
+	        placeholder="Enter username" value='${lastUsername == null ? "" : lastUsername }'>
 	        <label for="password">Password</label>
 	      <input type="password" class="form-control" name="password" id="password" 
 	        placeholder="New account will be created if username isn't exists">
 	      <input class="btn btn-primary mt-2" type="submit" value="Vào chơi" />
+	      <a class="btn btn-primary mt-2" href="<%=request.getContextPath() + UrlConst.PLAYER_REGISTER%>" >Đăng ký</a>
 	    </form>
 	</div>
 </body>
